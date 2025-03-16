@@ -17,7 +17,9 @@ export default defineConfig(({ command }) => {
       // mock 檔案存方的相對路徑目錄名，預設：mock-api
       dir: 'mock-api',
     }),],
-
+    server: {
+      proxy: {}
+    }
   };
 
   if (command === 'serve') {
