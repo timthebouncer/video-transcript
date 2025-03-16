@@ -14,7 +14,6 @@ function App() {
             fetch('/mock-api/api/videoInfo?mockFile=video')
                 .then(res => {
                     res.text().then(rs=>{
-                        console.log(JSON.parse(rs),'rrrsss')
                         const {scriptList} = JSON.parse(rs)
                         setContents(JSON.parse(scriptList))
                     })

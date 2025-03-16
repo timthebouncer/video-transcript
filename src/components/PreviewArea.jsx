@@ -191,7 +191,7 @@ export const PreviewArea=({videoSrc, setIsGenerateScript, highlights=[], content
                             const highlighted = isHighlight(item.start);
 
                             return (
-                                <div className="relative">
+                                <div className="relative" key={item.id}>
                                     <button
                                         className={`h-full w-full rounded p-3 cursor-pointer transition border-none ${
                                             highlighted ? 'bg-blue-500' : 'invisible'
