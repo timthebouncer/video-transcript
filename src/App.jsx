@@ -11,7 +11,9 @@ function App() {
 
     useEffect(()=>{
         if(videoSrc && !isGenerateScript){
-            fetch('/mock-api/api/videoInfo?mockFile=video')
+            const apiUrl = import.meta.env.PROD ? '/api/videoInfo' : '/mock-api/api/videoInfo?mockFile=video';
+
+            fetch(apiUrl)
                 .then(res => {
                     res.text().then(rs=>{
                         const {scriptList} = JSON.parse(rs)

@@ -30,7 +30,10 @@ export const PreviewArea=({videoSrc, setIsGenerateScript, highlights=[], content
                 const duration = playerRef.current.duration()
 
                 setIsGenerateScript(true)
-                fetch('/mock-api/api/generateScript?mockFile=video', {
+
+                const apiUrl = import.meta.env.PROD ? '/api/generateScript' : '/mock-api/api/generateScript?mockFile=video';
+
+                fetch(apiUrl, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'

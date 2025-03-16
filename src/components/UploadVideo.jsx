@@ -7,8 +7,9 @@ export const UploadVideo=({setVideoSrc})=> {
         if (file) {
             const url = URL.createObjectURL(file)
 
+            const apiUrl = import.meta.env.PROD ? '/api/uploadVideo' : '/mock-api/api/uploadVideo?mockFile=video';
 
-            fetch('/mock-api/api/uploadVideo?mockFile=video', {
+            fetch(apiUrl, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
