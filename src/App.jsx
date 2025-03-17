@@ -2,6 +2,7 @@ import {useEffect, useState} from 'react'
 import {TranscriptArea} from "./components/TranscriptArea.jsx";
 import {PreviewArea} from "./components/PreviewArea.jsx";
 import {UploadVideo} from "./components/UploadVideo.jsx";
+import {apiRequest} from "../api/video.js";
 
 function App() {
     const [videoSrc, setVideoSrc] = useState("")
@@ -11,16 +12,16 @@ function App() {
 
     useEffect(()=>{
         if(videoSrc && !isGenerateScript){
-            const apiUrl = import.meta.env.PROD ? '/api/videoInfo' : '/mock-api/api/videoInfo?mockFile=video';
 
-            fetch(apiUrl)
-                .then(res => {
-                    res.text().then(rs=>{
-                        const {scriptList} = JSON.parse(rs)
-                        setContents(JSON.parse(scriptList))
-                    })
-                })
-
+            apiRequest("/api/videoInfo", "GET")
+              .then(response => {
+                  if(response.status === 200){
+                      setContents(response.data)
+                  }
+              })
+              .catch(error => {
+                  console.log("錯誤:", error);
+              });
         }
     }, [videoSrc, isGenerateScript])
 
@@ -28,7 +29,7 @@ function App() {
         <div className="md:flex w-full h-100dvh">
             {
                 !videoSrc ? <UploadVideo setVideoSrc={setVideoSrc}/>:<>
-                    <TranscriptArea contents={contents} highlights={highlights} setHighlights={setHighlights} />
+                    <TranscriptArea contents={contents} highlights={highlights} setHighlights={setHighlights} isGenerateScript={isGenerateScript} />
                     <PreviewArea videoSrc={videoSrc} setIsGenerateScript={setIsGenerateScript} highlights={highlights} contents={contents} />
                 </>
             }

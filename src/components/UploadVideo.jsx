@@ -1,5 +1,6 @@
 import {useDropzone} from 'react-dropzone'
 import { IoCloudUploadOutline } from "react-icons/io5";
+import {apiRequest} from "../../api/video.js";
 
 export const UploadVideo=({setVideoSrc})=> {
     const onDrop = (acceptedFiles) => {
@@ -7,21 +8,15 @@ export const UploadVideo=({setVideoSrc})=> {
         if (file) {
             const url = URL.createObjectURL(file)
 
-            const apiUrl = import.meta.env.PROD ? '/api/uploadVideo' : '/mock-api/api/uploadVideo?mockFile=video';
-
-            fetch(apiUrl, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    url: url
-                })
-            })
-                .then(response => response.json())
-                .then(data => {
-                    setVideoSrc(data.url);
-            });
+            apiRequest("/api/uploadVideo", "POST", JSON.stringify(url))
+              .then(response => {
+                if (response.status === 200) {
+                  setVideoSrc(response.videoUrl)
+                }
+              })
+              .catch(error => {
+                  console.log("錯誤:", error);
+              });
         }
     }
     const {getRootProps, getInputProps} = useDropzone({onDrop})

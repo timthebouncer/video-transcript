@@ -5,6 +5,7 @@ import { CiPlay1 } from "react-icons/ci";
 import { IoPlaySkipBackOutline } from "react-icons/io5";
 import { IoPlaySkipForwardOutline } from "react-icons/io5";
 import { CiPause1 } from "react-icons/ci";
+import {apiRequest} from "../../api/video.js";
 
 
 export const PreviewArea=({videoSrc, setIsGenerateScript, highlights=[], contents})=>{
@@ -31,23 +32,15 @@ export const PreviewArea=({videoSrc, setIsGenerateScript, highlights=[], content
 
                 setIsGenerateScript(true)
 
-                const apiUrl = import.meta.env.PROD ? '/api/generateScript' : '/mock-api/api/generateScript?mockFile=video';
-
-                fetch(apiUrl, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        duration: duration
-                    })
-                }).then(response => response.json())
-                    .then(data => {
-                        if(data.code === 200){
-                            setIsGenerateScript(false)
-                        }
-                    });
-
+                apiRequest("/api/generateScript", "POST", JSON.stringify({duration: duration}))
+                  .then(response => {
+                      if (response.status === 200) {
+                          setIsGenerateScript(false)
+                      }
+                  })
+                  .catch(error => {
+                      console.log("錯誤:", error);
+                  });
 
                 updateRemainingTime()
             });
